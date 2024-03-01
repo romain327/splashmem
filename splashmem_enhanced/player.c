@@ -18,5 +18,7 @@ void player_init(t_player* p_player, uint8_t num)
     p_player->data = NULL;
     p_player->credits = P_CREDITS;
     p_player->count = 0;
-    p_player->bomb_count = 0;
+    p_player->last_bomb = 0;
+	p_player->bomb_drop = 0;
+    p_player->is_done = 0;
 }

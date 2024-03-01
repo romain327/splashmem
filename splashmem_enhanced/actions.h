@@ -6,6 +6,7 @@
 #include "world.h"
 #include <dlfcn.h>
 #include <stdio.h>
+#include <string.h>
 
 enum action
 {
@@ -29,16 +30,21 @@ enum action
 
 typedef struct s_bomb
 {
-    uint32_t id_p;
-    uint8_t id_b;
-    uint32_t color;
-    uint8_t* data;
+    int id_p;
+    int id_b;
     uint32_t x;
     uint32_t y;
     uint32_t timer;
 } t_bomb;
 
+extern t_bomb bombs[];
+extern t_bomb fake_bomb;
+extern char cmd[];
+
+
 void actions_do(t_player *p_player, enum action act_id);
 void actions_init(int argc, char *argv[]);
 void link_player(t_player *p_player, char *path);
+void explode_bomb(t_bomb *p_bomb);
+void err(char *msg);
 #endif

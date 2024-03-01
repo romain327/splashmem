@@ -9,6 +9,8 @@
 #include "actions.h"
 #include "splash.h"
 
+char finish = 0;
+
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
@@ -56,6 +58,21 @@ void render_player()
     SDL_UpdateWindowSurface(window);
 }
 
+void check_bombs(int i)
+{
+    for (int j = 0; j < MAX_PLAYERS*BOMB_COUNTER; j++)
+    {
+        if (bombs[j].id_p == i+1)
+        {
+            bombs[j].timer--;
+            if (bombs[j].timer == 0)
+            {
+                explode_bomb(&bombs[j]);
+            }
+        }
+    }
+}
+
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
@@ -74,13 +91,35 @@ void main_loop()
                 quitting = 1;
             }
         }
-
-        for (int i = 0; i < MAX_PLAYERS ; i++)
-        {
-            world_do_player_action(players[i]);
+        while (finish < MAX_PLAYERS) {
+            for (int i = 0; i < MAX_PLAYERS ; i++)
+            {
+                if (players[i]->credits > 0)
+                {
+                    //printf("Player %d credits: %d\n", i, players[i]->credits);
+                    world_do_player_action(players[i], cmd[i]);
+                    check_bombs(i);
+                }
+                else {
+                    if (players[i]->is_done == 0)
+                    {
+                        players[i]->is_done = 1;
+                        finish++;
+                    }
+                }
+            }
+	        render_map();
+            render_player();
+	        SDL_Delay(500);
         }
-	render_map();
-    render_player();
-	SDL_Delay(200);
+        for (int i = 0; i < BOMB_COUNTER; i++)
+        {
+            for (int j = 0; j < MAX_PLAYERS; j++)
+            {
+                check_bombs(j);
+            }
+        }
+
     }
+    quitting = 1;
 }

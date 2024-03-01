@@ -17,6 +17,7 @@ typedef struct s_player
     uint32_t bomb_count;
 	int last_bomb;
 	uint8_t bomb_drop;
+    uint8_t is_done;
     char (*get_action)();
 } t_player;
 

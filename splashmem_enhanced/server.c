@@ -1,57 +1,89 @@
 #include "server.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
+const int port_num = 2000;
+const int maxlength = 256;
+short ports[4] = {0, 0, 0, 0};
 
-int main() {
-    int server_fd, new_socket, valread;
-    struct sockaddr_in address;
-    int opt = 1;
-    int addrlen = sizeof(address);
+void err(char s[]) {
+    perror(s);
+    exit(EXIT_FAILURE);
+}
 
-    // Création du socket du serveur
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        perror("Socket creation failed");
-        exit(EXIT_FAILURE);
+void handle_client(int accept_sd, struct sockaddr_in addrcli, int i) {
+    char msg[maxlength];
+    char replymsg[maxlength];
+
+    while (1) {
+        int ret = recvfrom(accept_sd, msg, maxlength, 0, NULL, NULL);
+        if (ret == -1) {
+            err("recvfrom");
+            break;
+        } else if (ret == 0) {
+            printf("Client déconnecté (port = %d)\n", ntohs(addrcli.sin_port));
+            break;
+        } else {
+            msg[ret] = '\0';
+            printf("Client (port = %d) dit : %s\n", ntohs(addrcli.sin_port), msg);
+
+            // prépare et envoie une réponse
+            snprintf(replymsg, maxlength, "J'ai bien reçu '%s'", msg);
+            ret = sendto(accept_sd, replymsg, strlen(replymsg), 0, (const struct sockaddr*)&addrcli, sizeof(addrcli));
+            if (ret == -1) {
+                err("sendto");
+                break;
+            }
+            cmd[i] = msg[0];
+        }
     }
 
-    // Force l'utilisation de l'adresse et du port même si ils sont déjà utilisés
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-        perror("Setsockopt failed");
-        exit(EXIT_FAILURE);
+    close(accept_sd);
+}
+
+void server() {
+    int sd;
+    int i = 0;
+    struct sockaddr_in addrsrv;
+    struct sockaddr_in addrcli;
+    socklen_t len_addrcli = sizeof(addrcli);
+
+    if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        err("création socket");
     }
 
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(PORT);
+    addrsrv.sin_family = AF_INET;
+    addrsrv.sin_port = htons(port_num);
+    addrsrv.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    // Attache le socket à l'adresse spécifiée et au port
-    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        perror("Bind failed");
-        exit(EXIT_FAILURE);
+    if (bind(sd, (const struct sockaddr*)&addrsrv, sizeof(addrsrv)) != 0) {
+        err("bind");
     }
 
-    // Ecoute les connexions entrantes
-    if (listen(server_fd, MAX_CLIENTS) < 0) {
-        perror("Listen failed");
-        exit(EXIT_FAILURE);
+    listen(sd, 5);
+
+    printf("Serveur en attente de connexions sur le port %d\n", port_num);
+
+    while (1) {
+        int accept_sd = accept(sd, (struct sockaddr*)&addrcli, &len_addrcli);
+        if (accept_sd == -1) {
+            err("accept");
+        }
+
+        printf("Nouvelle connexion acceptée (port = %d)\n", ntohs(addrcli.sin_port));
+        ports[i] = ntohs(addrcli.sin_port);
+        i++;
+        // Crée un processus pour gérer la nouvelle connexion
+        pid_t child_pid = fork();
+
+        if (child_pid == -1) {
+            err("fork");
+        } else if (child_pid == 0) {
+            // Dans le processus enfant, ferme le socket d'écoute
+            close(sd);
+            handle_client(accept_sd, addrcli, i-1);
+            exit(EXIT_SUCCESS);
+        } else {
+            // Dans le processus parent, ferme le socket de la connexion acceptée
+            close(accept_sd);
+        }
     }
-
-    // Accepte les connexions entrantes
-    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
-        perror("Accept failed");
-        exit(EXIT_FAILURE);
-    }
-
-    // Envoie un message au client
-    char *message = "Hello from server!";
-    send(new_socket, message, strlen(message), 0);
-    printf("Message sent to the client\n");
-
-    close(server_fd);
-
-    return 0;
 }

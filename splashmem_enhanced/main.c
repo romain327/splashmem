@@ -8,6 +8,7 @@
 #include "world.h"
 #include "actions.h"
 #include "splash.h"
+#include "server.h"
 
 int quitting = 0;
 SDL_Window *window = NULL;
@@ -31,6 +32,14 @@ int SDLCALL watch(void *userdata, SDL_Event *event)
 /* ------------------------------------------------------------------------- */
 int main(int argc, char *argv[])
 {
+    system("gcc cl/client.c -o cl/client");
+
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        server();
+    }
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0)
     {
         SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
@@ -47,6 +56,7 @@ int main(int argc, char *argv[])
         printf("Wrong argument number\n");
         return 1;
     }
+
     inits(argc, argv);
 
     main_loop();

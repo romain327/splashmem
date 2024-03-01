@@ -372,5 +372,4 @@ void explode_bomb(t_bomb *bomb) {
 	players[bomb->id_p-1]->x = px;
 	players[bomb->id_p-1]->y = py;
 	bombs[bomb->id_b] = fake_bomb;
-    printf(" bitch\n");
 }

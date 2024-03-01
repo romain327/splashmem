@@ -1,6 +1,8 @@
 #ifndef __SPALSH__
 #define __SPLASH__
 
+#include "param.h"
+
 extern SDL_Window* window;
 extern SDL_Surface* screenSurface;
 extern uint32_t colors[];

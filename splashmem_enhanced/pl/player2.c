@@ -1,22 +1,39 @@
 #include "actions.h"
 #include <stdio.h>
-#define MAX_PLAY_ACTION 2
 
-char play_actions[] = {
-	ACTION_MOVE_U,
-    ACTION_MOVE_R,
-};
-
-char get_action()
+char get_action(char msg)
 {
-    static int i = 0;
-    char ret_val = 0;
-
-    ret_val = play_actions[i];
-    i++;
-    if (i >= MAX_PLAY_ACTION)
+    switch (msg)
     {
-        i = 0;
-    } 
-    return (ret_val);
+    case 'z':
+        return ACTION_DASH_U;
+    case 'q':
+        return ACTION_DASH_L;
+    case 's':
+        return ACTION_DASH_D;
+    case 'd':
+        return ACTION_DASH_R;
+    case 'a':
+        return ACTION_BOMB;
+    case 'e':
+        return ACTION_SPLASH;
+    case 'i':
+        return ACTION_TELEPORT_U;
+    case 'k':
+        return ACTION_TELEPORT_D;
+    case 'j':
+        return ACTION_TELEPORT_L;
+    case 'l':
+        return ACTION_TELEPORT_R;
+    case 'g':
+        return ACTION_DASH_U;
+    case 'v':
+        return ACTION_DASH_L;
+    case 'b':
+        return ACTION_DASH_D;
+    case 'n':
+        return ACTION_DASH_R;
+    default:
+        return ACTION_STILL;
+    }
 }

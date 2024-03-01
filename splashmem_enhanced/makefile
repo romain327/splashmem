@@ -17,6 +17,7 @@ clean_pl:
 
 clean_all: clean 
 	cd pl && $(MAKE) clean
+	cd cl && rm client
 
 tp5: $(OBJS)
 	gcc  $(OBJS) -ldl -lSDL2 -lsplash -o $(EXE)

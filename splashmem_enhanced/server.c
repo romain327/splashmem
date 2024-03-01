@@ -2,6 +2,7 @@
 
 const int port_num = 2000;
 const int maxlength = 256;
+int sd;
 short ports[4] = {0, 0, 0, 0};
 
 void err(char s[]) {
@@ -38,8 +39,14 @@ void handle_client(int accept_sd, struct sockaddr_in addrcli, int i, char *share
     close(accept_sd);
 }
 
+
+void sigterm_handler(int signum) {
+    close(sd);
+    printf("Socket closed.\n");
+    exit(signum);
+}
+
 void server(int shmid) {
-    int sd;
     int i = 0;
     struct sockaddr_in addrsrv;
     struct sockaddr_in addrcli;
@@ -52,6 +59,8 @@ void server(int shmid) {
         err("création socket");
     }
 
+
+
     addrsrv.sin_family = AF_INET;
     addrsrv.sin_port = htons(port_num);
     addrsrv.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -59,6 +68,8 @@ void server(int shmid) {
     if (bind(sd, (const struct sockaddr*)&addrsrv, sizeof(addrsrv)) != 0) {
         err("bind");
     }
+
+    signal(SIGTERM, sigterm_handler);
 
     listen(sd, 5);
 

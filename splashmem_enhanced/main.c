@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     inits(argc, argv);
 
-    main_loop(shared_memory);
+    main_loop(shared_memory, pid);
 
     SDL_DelEventWatch(watch, NULL);
     SDL_DestroyWindow(window);

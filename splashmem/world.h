@@ -2,7 +2,9 @@
 #define __WORLD__
 
 #include "param.h"
-#include "player.h" 
+#include "player.h"
+#include <SDL2/SDL_ttf.h>
+
 
 extern uint8_t mapmem[];
 extern t_player *players[];

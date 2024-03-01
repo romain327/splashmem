@@ -6,13 +6,13 @@ char get_action(char msg)
     switch (msg)
     {
     case 'z':
-        return ACTION_DASH_U;
+        return ACTION_MOVE_U;
     case 'q':
-        return ACTION_DASH_L;
+        return ACTION_MOVE_L;
     case 's':
-        return ACTION_DASH_D;
+        return ACTION_MOVE_D;
     case 'd':
-        return ACTION_DASH_R;
+        return ACTION_MOVE_R;
     case 'a':
         return ACTION_BOMB;
     case 'e':

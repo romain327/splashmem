@@ -78,25 +78,23 @@ void check_bombs(int i)
 /* ------------------------------------------------------------------------- */
 void main_loop()
 {
-    // int is_game_finish = 0;   vous pouvez l'utilisez
-
     while (!quitting)
     {
-        SDL_Event event;
+        while (finish < MAX_PLAYERS && !quitting) {
+            SDL_Event event;
 
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                quitting = 1;
+        	while (SDL_PollEvent(&event))
+        	{
+            	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q)
+            	{
+                    printf("Quitting\n");
+                    quitting = 1;
+                }
             }
-        }
-        while (finish < MAX_PLAYERS) {
             for (int i = 0; i < MAX_PLAYERS ; i++)
             {
                 if (players[i]->credits > 0)
                 {
-                    printf("Player %d credits: %d\n", i, players[i]->credits);
                     world_do_player_action(players[i]);
                     check_bombs(i);
                 }
@@ -119,7 +117,8 @@ void main_loop()
                 check_bombs(j);
             }
         }
-
-    }
     quitting = 1;
+    }
+	world_get_winner();
+    SDL_Quit();
 }

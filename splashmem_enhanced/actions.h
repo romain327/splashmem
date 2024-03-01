@@ -7,6 +7,8 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
+#include <sys/types.h>
 
 enum action
 {
@@ -25,8 +27,7 @@ enum action
     ACTION_TELEPORT_D,
     ACTION_SPLASH,
     ACTION_BOMB,
-	ACTION_NONE,
-    ACTION_NUMBER
+	ACTION_NONE
 };
 
 typedef struct s_bomb

@@ -48,12 +48,28 @@ void world_paint_spot(uint32_t x, uint32_t y, uint32_t num)
     mapmem[pos] = num;
 }
 
-
-
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
 void world_get_winner()
 {
-
+    int colors[MAX_PLAYERS] = {0};
+    for (int i = 0; i < MAP_SIZE * MAP_SIZE; i++)
+    {
+        if (mapmem[i] != 0)
+        {
+            colors[mapmem[i] - 1]++;
+        }
+    }
+    int max = colors[0];
+    int winner = 1;
+    for (int i = 1; i < MAX_PLAYERS; i++)
+    {
+        if (colors[i] > max)
+        {
+            max = colors[i];
+            winner = i + 1;
+        }
+    }
+    printf("Player %d wins\n", winner);
 }

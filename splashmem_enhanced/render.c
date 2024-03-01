@@ -76,26 +76,26 @@ void check_bombs(int i)
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
-void main_loop(char *shared_memory)
+void main_loop(char *shared_memory, pid_t pid)
 {
     while (!quitting)
     {
-        SDL_Event event;
+        while (finish < MAX_PLAYERS && !quitting) {
 
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                quitting = 1;
-            }
-        }
-        while (finish < MAX_PLAYERS) {
+			SDL_Event event;
+
+        	while (SDL_PollEvent(&event))
+        	{
+            	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q)
+            	{
+                	quitting = 1;
+            	}
+        	}
             for (int i = 0; i < MAX_PLAYERS ; i++)
             {
                 if (players[i]->credits > 0)
                 {
-                    printf("%c\n", cmd[i]);
-                    //printf("Player %d credits: %d\n", i, players[i]->credits);
+                    printf("%c\n", shared_memory[i]);
                     world_do_player_action(players[i], shared_memory[i]);
                     shared_memory[i] = '0';
                     check_bombs(i);
@@ -119,7 +119,9 @@ void main_loop(char *shared_memory)
                 check_bombs(j);
             }
         }
-
+	quitting = 1;
     }
-    quitting = 1;
+	world_get_winner();
+    SDL_Quit();
+    kill(pid, SIGTERM);
 }

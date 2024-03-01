@@ -11,7 +11,6 @@ players:
 all: players $(OBJS)
 	@echo $(SRCS) 
 	gcc  $(OBJS) $(CFLAGS) $(LDFLAGS) -o $(EXE)
-	gcc client.c -o client
 
 clean_pl:
 	cd pl && $(MAKE) clean

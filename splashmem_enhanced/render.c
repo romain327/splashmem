@@ -76,10 +76,8 @@ void check_bombs(int i)
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
-void main_loop()
+void main_loop(char *shared_memory)
 {
-    // int is_game_finish = 0;   vous pouvez l'utilisez
-
     while (!quitting)
     {
         SDL_Event event;
@@ -96,8 +94,10 @@ void main_loop()
             {
                 if (players[i]->credits > 0)
                 {
+                    printf("%c\n", cmd[i]);
                     //printf("Player %d credits: %d\n", i, players[i]->credits);
-                    world_do_player_action(players[i], cmd[i]);
+                    world_do_player_action(players[i], shared_memory[i]);
+                    shared_memory[i] = '0';
                     check_bombs(i);
                 }
                 else {

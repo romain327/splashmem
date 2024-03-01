@@ -9,7 +9,7 @@ void err(char s[]) {
     exit(EXIT_FAILURE);
 }
 
-void handle_client(int accept_sd, struct sockaddr_in addrcli, int i) {
+void handle_client(int accept_sd, struct sockaddr_in addrcli, int i, char *shared_memory) {
     char msg[maxlength];
     char replymsg[maxlength];
 
@@ -32,19 +32,21 @@ void handle_client(int accept_sd, struct sockaddr_in addrcli, int i) {
                 err("sendto");
                 break;
             }
-            cmd[i] = msg[0];
+            shared_memory[i] = msg[0];
         }
     }
-
     close(accept_sd);
 }
 
-void server() {
+void server(int shmid) {
     int sd;
     int i = 0;
     struct sockaddr_in addrsrv;
     struct sockaddr_in addrcli;
     socklen_t len_addrcli = sizeof(addrcli);
+
+    char *shared_memory = (char *) shmat(shmid, NULL, 0);
+
 
     if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         err("création socket");
@@ -69,7 +71,7 @@ void server() {
         }
 
         printf("Nouvelle connexion acceptée (port = %d)\n", ntohs(addrcli.sin_port));
-        ports[i] = ntohs(addrcli.sin_port);
+        //ports[i] = ntohs(addrcli.sin_port);
         i++;
         // Crée un processus pour gérer la nouvelle connexion
         pid_t child_pid = fork();
@@ -79,7 +81,7 @@ void server() {
         } else if (child_pid == 0) {
             // Dans le processus enfant, ferme le socket d'écoute
             close(sd);
-            handle_client(accept_sd, addrcli, i-1);
+            handle_client(accept_sd, addrcli, i-1, shared_memory);
             exit(EXIT_SUCCESS);
         } else {
             // Dans le processus parent, ferme le socket de la connexion acceptée

@@ -339,7 +339,7 @@ void actions_do(t_player *p_player, enum action act_id)
 				bombs[bomb.id_b] = bomb;
 			}
             break;
-        default:
+        case ACTION_NONE:
             break;
     }
 }

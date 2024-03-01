@@ -11,6 +11,6 @@ extern int quitting;
 
 void init_colors(SDL_PixelFormat *format);
 void inits(int argc, char *argv[]);
-void main_loop();
+void main_loop(char *shared_memory);
 
 #endif 

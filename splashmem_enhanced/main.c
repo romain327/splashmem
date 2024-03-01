@@ -34,10 +34,20 @@ int main(int argc, char *argv[])
 {
     system("gcc cl/client.c -o cl/client");
 
+	int shmid;
+
+	shmid = shmget(IPC_PRIVATE, 4*sizeof(char), IPC_CREAT | 0666);
+	char *shared_memory = (char *) shmat(shmid, NULL, 0);
+
+	for(int i = 0; i < MAX_PLAYERS; i++)
+    {
+	        shared_memory[i] = '0';
+    }
+
     pid_t pid = fork();
     if (pid == 0)
     {
-        server();
+        server(shmid);
     }
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0)
@@ -59,7 +69,7 @@ int main(int argc, char *argv[])
 
     inits(argc, argv);
 
-    main_loop();
+    main_loop(shared_memory);
 
     SDL_DelEventWatch(watch, NULL);
     SDL_DestroyWindow(window);

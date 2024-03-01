@@ -33,7 +33,9 @@ char get_action(char msg)
         return ACTION_DASH_D;
     case 'n':
         return ACTION_DASH_R;
-    default:
+    case 'o':
         return ACTION_STILL;
+    default:
+        return ACTION_NONE;
     }
 }

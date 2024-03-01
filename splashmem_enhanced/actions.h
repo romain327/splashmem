@@ -25,6 +25,7 @@ enum action
     ACTION_TELEPORT_D,
     ACTION_SPLASH,
     ACTION_BOMB,
+	ACTION_NONE,
     ACTION_NUMBER
 };
 

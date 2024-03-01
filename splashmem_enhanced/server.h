@@ -11,7 +11,7 @@
 #include "actions.h"
 
 void err(char *msg);
-void handle_client(int accept_sd, struct sockaddr_in addrcli, int i);
-void server();
+void handle_client(int accept_sd, struct sockaddr_in addrcli, int i, char *shared_memory);
+void server(int shmid);
 
 #endif //SERVER_H

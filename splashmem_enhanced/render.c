@@ -95,7 +95,6 @@ void main_loop(char *shared_memory, pid_t pid)
             {
                 if (players[i]->credits > 0)
                 {
-                    printf("%c\n", shared_memory[i]);
                     world_do_player_action(players[i], shared_memory[i]);
                     shared_memory[i] = '0';
                     check_bombs(i);

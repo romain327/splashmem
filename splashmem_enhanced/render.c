@@ -109,7 +109,7 @@ void main_loop(char *shared_memory, pid_t pid)
             }
 	        render_map();
             render_player();
-	        SDL_Delay(500);
+	        SDL_Delay(100);
         }
         for (int i = 0; i < BOMB_COUNTER; i++)
         {

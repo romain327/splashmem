@@ -1,32 +1,25 @@
 # splashmem
-ce projet contient en réalité 2 projets :
-- le splashmem "de base" qui est suffisant pour avoir 15, qui se trouve dans le dossier ```splashmem```
-- le splashmem avancé avec des modifications, dans le dossier ```splashmem_enhanced```
+A little school project of a kind of 2D version of splatoon with SDL. There are players that can move according to a list of movements, each movements make them spend credits and the game stops when all the players' credits reach 0. Being able to do that would give us a 15/20 grade, and we were asked to enhance the project in order to get a 20/20. That's why this projects contains actually 2 version of splashmem :
+- the basic project that can be found in the ```splashmem``` folder.
+- the enhanced project that can be found in the ```splashmem_enhanced``` folder.
 
-## splashmem_enhanced
-Cette version de splashmeme est assez lourdement modifiée. On y trouve d'abord deux fichiers en plus de la version de base : client.c et server.c ... Eh oui une implémentation du jeu en mode client-server !
-On va, pour le bon fonctionnement du programme, se limiter à 4 clients. La raison c'est que le serveur peut évidemment en accepter plus, mais on a gardé les 4 joueurs de base sans implémenter un nombre de joueur dépendant du nombre de clients connectés au serveur. On n'a pas testé ce qu'il se passerait si on essayait de connecter un 5eme client, et on a pas vraiment envie de savoir (ça plante).
-Mais avec 4 clients max ça marche niquel donc on va rester la dessus :)
-On a donc une connexion client-serveur à base de sockets. On va maintenant détailler un peu plus le fonctionnement du code pour que vous puissiez vous y retrouver :
+## About splashmem_enhanced
+We were given exemple of what an enhanced project could be : make a better display, a little menu, things like this...
+I decided to use my system programming knowledge from CS bachelor to make a server-client version of the game, where each player could be controlled by a client processus, and each player's moves would be bound on a key. This version works for 4 players max. More client could connect to the server but the game would crash because I didn't handle the "if a new client connects it creates a new player" part because of a lack of time. But from one to four players it works perfectly.
 
-### Programme principal
-On a bien évidemment le splashmem de base, ici rien ne change mise a part les librairies des joueurs. La fonction get_action() est juste un switch case qui renvoi la bonne action en fonction du char passé en paramètre. Ca permet de bind nos actions sur les touches de notre clavier.
-On a au tout début du main, une création de segment de mémoire partagée. Cela permet au serveur, qui tourne dans un processus séparé du programme principal, de transmettre au programme principal les touches enfoncées par les clients. On est sur de la communication IPC, mais rien de bien compliqué.
-Ensuite on fork notre processus main, et on execute le serveur dans le processus enfant. C'est la solution trouvée pour palier au problème rencontré lorsque le serveur tournait dans le processus principal, on avait des erreurs de render SDL a cause du serveur qui écoutait en permanance.
+We have a socket connection between the server and the players, and a shared array between the server process and the game process. When a clients connects it can send keys to the server, which will write the received char in the shared array at the index of the client (first client's keys will be written at index 0 and so on). Then the game process loops on the array and execute the action linked to the char it reads.
 
-### Serveur
-On a deux éléments interessants dans ce processus serveur, la première c'est la gestion des clients, qui se fait en continue. La deuxième, c'est la fonction sigterm_handler, qui gère la fermeture de la socket serveur. En effet, en envoyant un bête SIGKILL, la socket n'est pas fermée correctement, et en relançant le processus le port était indiqué comme déjà utilisé.
+### Try the programm
 
-### Client
-Le processus client gère l'envoi des touches au serveur dès qu'elles sont tapées au clavier.
+To try this programm, open a bash, go to the folder splashmem_enhanced and type : ```make all```, then ```./run.sh```. This will start the server. To lunch clients, in the folder ```cl```, open a new bash and type ```./client``` and the client process will connect to the server, then you can start sending commands.
 
-### Test
-Tester le programme peut-être un peu long et fastidieux donc on vous a mis une vidéo de démonstration également.
+The credits number is 9000, it's huge so if you want to close the game, you have two ways : 
+- wait for all 4 players to reach 0 credits
+- click on the SDL window and press the q key. This will close the window and stop the server with a SIGTERM signal.
 
-Pour lancer le programme, ouvrir un terminal, se placer dans le dossier splashmem_enhanced et taper la commande ```make all```, puis ```./run.sh```
+To stop the client, just press x in the client process.
 
-Pour les clients, ouvrir d'autres terminaux, dans chacun d'eux, se placer dans le dossier splashmem_enhanced/cl et taper la commande ```./client```
+## Libraries
+you may need to install libraries for SDL. In order to do that, open a shell and type ```sudo apt-get install libsdl2-2.0-0``` or whatever package manager you use. 
 
-Ensuite pour chacun des processus client, appuyer sur les touches correspondant aux déplacements.
-
-La touche pour fermer la fenêtre SDL est la touche q.
+Enjoy :)

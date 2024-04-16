@@ -20,6 +20,16 @@ The credits number is 9000, it's huge so if you want to close the game, you have
 To stop the client, just press x in the client process.
 
 ## Libraries
-you may need to install libraries for SDL. In order to do that, open a shell and type ```sudo apt-get install libsdl2-2.0-0``` or whatever package manager you use. 
+You may need to install libraries for SDL. In order to do that, open a shell and type ```sudo apt-get install libsdl2-2.0-0``` or whatever package manager you use. 
+
+## About splashmem_rebuild
+This is a rebuild of splashmem using SDL renderer in order to try to make the game smoother.
+This version is still under construction.
+
+## Coming soon
+I'll try to build this project for Windows too.
+
+## Related
+As a following of this project, we were given another project in which we had to make a downloadable version of this game, and parameter this game from a website. The source code is visible [here]{https://github.com/romain327/better_splashmem}, and you can follow the instructions and the project explanations here : https://brouard.dev/splashmem
 
 Enjoy :)

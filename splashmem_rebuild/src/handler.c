@@ -1,4 +1,4 @@
-#include "handler.h"
+#include "../include/handler.h"
 
 void handle(SDL_Event *e, SDL_Renderer *renderer, SDL_Window *window) {
     switch (e->type) {
@@ -17,5 +17,4 @@ void quit(SDL_Renderer *renderer, SDL_Window *window) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    exit(EXIT_SUCCESS);
 }

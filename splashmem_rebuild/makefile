@@ -1,25 +1,18 @@
 CC = gcc
-CFLAGS = -Wall -g2 -I./include
+CFLAGS = -Wall -g2
+
 SRCDIR = src
-INCDIR = include
+INC = /home/romain/Bureau/Info/Projets/splashmem/splashmem_rebuild_v2/include
+SRCS = $(wildcard $(SRCDIR)/*.c)
+OBJS = $(SRCS:.c=.o)
+EXE = splashmem
 
-SRCFILES = $(wildcard $(SRCDIR)/*.c)
-HDRFILES = $(wildcard $(INCDIR)/*.h)
-OBJFILES = $(patsubst $(SRCDIR)/%.c, %.o, $(SRCFILES))
+LDFLAGS = -lSDL2 -ldl
 
-TARGET = splash
+all: $(EXE)
 
-$(TARGET): $(OBJFILES)
-	$(CC) $(CFLAGS) $^ -o $@ -lSDL2
+$(EXE): $(OBJS)
+	$(CC) $(CFLAGS) $(LIBS) -I$(INC) $(OBJS) -o $(EXE)
 
-%.o: $(SRCDIR)/%.c $(HDRFILES)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-.PHONY: run clean
-
-run: $(TARGET)
-	chmod +x $(TARGET)
-	./$(TARGET) pl/p1.so pl/p2.so pl/p3.so pl/p4.so
-
-clean:
-	rm -f $(OBJFILES) $(TARGET)
+%.o: %.c
+	$(CC) $(CFLAGS) -I$(INC) -c $<

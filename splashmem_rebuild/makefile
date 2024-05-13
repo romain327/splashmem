@@ -16,3 +16,4 @@ $(EXE): $(OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -I$(INC) -c $<
+	mv *.o $(SRCDIR)

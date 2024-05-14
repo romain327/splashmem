@@ -2,17 +2,22 @@ CC = gcc
 CFLAGS = -Wall -g2
 
 SRCDIR = src
-INC = /home/romain/Bureau/Info/Projets/splashmem/splashmem_rebuild_v2/include
+INC = include
 SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:.c=.o)
 EXE = splashmem
 
-LDFLAGS = -lSDL2 -ldl
+#LDFLAGs = -lSDL2 -lcurl -lSDL -lSDL2_ttf -L/usr/lib/x86_64-linux-gnu
+LDFLAGS = `sdl2-config --libs --cflags` -lSDL2_ttf -lcurl
 
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) -I$(INC) $(OBJS) -o $(EXE)
+	mv *.o $(SRCDIR)
+	$(CC) $(CFLAGS) -I$(INC) $(OBJS) $(LDFLAGS) -o $(EXE)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -I$(INC) -c $<
+
+clean:
+	rm -f $(SRCDIR)/*.o $(EXE)

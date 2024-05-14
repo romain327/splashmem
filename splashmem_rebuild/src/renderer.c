@@ -1,4 +1,4 @@
-#include "../include/renderer.h"
+#include "renderer.h"
 
 void renderMap(SDL_Renderer *renderer, Cell map[MAP_SIZE][MAP_SIZE]) {
     for(int x = 0; x<MAP_SIZE; x+=CELL_SIZE) {

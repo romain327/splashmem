@@ -1,4 +1,4 @@
-#include "../include/inits.h"
+#include "inits.h"
 
 uint32_t init(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *grid, SDL_Color color, uint32_t nb_player, char *argv[], Player **players, Cell map[MAP_SIZE][MAP_SIZE], char *game_master) {
     uint32_t window_success = init_window(window, renderer);

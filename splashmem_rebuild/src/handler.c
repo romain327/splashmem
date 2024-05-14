@@ -1,4 +1,4 @@
-#include "../include/handler.h"
+#include "handler.h"
 
 void handle(SDL_Event *e, SDL_Renderer *renderer, SDL_Window *window) {
     switch (e->type) {

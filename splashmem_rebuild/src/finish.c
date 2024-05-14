@@ -1,4 +1,4 @@
-#include "../include/finish.h"
+#include "finish.h"
 
 void get_winner(Player **players, uint32_t nb_player) {
     uint32_t results[nb_player];

@@ -1,4 +1,4 @@
-#include "../include/action.h"
+#include "action.h"
 
 void action_do(Player *player, Cell map[MAP_SIZE][MAP_SIZE], char act) {
     uint32_t on_border;

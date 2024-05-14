@@ -7,7 +7,6 @@ SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:.c=.o)
 EXE = splashmem
 
-#LDFLAGs = -lSDL2 -lcurl -lSDL -lSDL2_ttf -L/usr/lib/x86_64-linux-gnu
 LDFLAGS = `sdl2-config --libs --cflags` -lSDL2_ttf -lcurl
 
 all: $(EXE)

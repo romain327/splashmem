@@ -28,7 +28,7 @@ uint32_t init_window(SDL_Window *window, SDL_Renderer *renderer) {
         fprintf(stderr, "SDL_CreateWindowAndRenderer Error: %s\n", SDL_GetError());
         return EXIT_ERROR;
     }
-
+    printf("Window init successful\n");
     return EXIT_SUCCESS;
 }
 

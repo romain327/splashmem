@@ -1,6 +1,8 @@
 #include "main.h"
 
 int main(int argc, char *argv[]) {
+    setvbuf(stdout, NULL, _IONBF, 0);
+
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *grid;
@@ -13,8 +15,6 @@ int main(int argc, char *argv[]) {
     char *game_master;
     Player *players[nb_player];
     Cell map[MAP_SIZE][MAP_SIZE];
-
-    setvbuf(stdout, NULL, _IONBF, 0);
 
     if(init(window, renderer, grid, grid_color, nb_player, argv, players, map, game_master) == EXIT_ERROR) {
         return EXIT_ERROR;

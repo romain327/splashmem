@@ -1,4 +1,5 @@
 CC = gcc
+DB = gdb
 CFLAGS = -Wall -g2
 
 SRCDIR = src
@@ -6,6 +7,7 @@ INC = include
 SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:.c=.o)
 EXE = splashmem
+ARGS = game_config.bin libs/p1.so libs/p2.so
 
 LDFLAGS = `sdl2-config --libs --cflags` -lSDL2_ttf -lcurl
 
@@ -20,3 +22,9 @@ $(EXE): $(OBJS)
 
 clean:
 	rm -f $(SRCDIR)/*.o $(EXE)
+
+debug: $(EXE)
+	$(DB) $(EXE) $(ARGS)
+
+run:
+	./$(EXE) $(ARGS)

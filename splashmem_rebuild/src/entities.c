@@ -12,23 +12,29 @@ void init_bomb(Bomb *bomb) {
 /***********************************************************************************/
 /*                                     PLAYER                                      */
 /***********************************************************************************/
-Player *init_player(uint32_t nb_player, uint8_t num, char *lib) {
+Player *init_player(uint32_t nb_player, uint8_t num, char *lib, uint32_t pos[2][nb_player]) {
     Player *player = malloc(sizeof(Player));
     player->id = num;
-    uint32_t **pos = init_player_pos(nb_player, num);
-    player->x = pos[0][num-1]*10;
-    player->y = pos[1][num-1]*10;
+    player->x = pos[0][num-1];
+    player->y = pos[1][num-1];
     player->p = (SDL_Rect){player->x, player->y, CELL_SIZE, CELL_SIZE};
+
+    printf("init player %d color\n", num);
     player->player_color = init_player_color(num);
     player->credits = CREDITS;
     player->is_done = 0;
+
+    printf("init player %d bombs\n", num);
     Bomb *bombs[BOMB_TIMER];
     for (int i = 0; i < BOMB_TIMER; i++) {
+        bombs[i] = malloc(sizeof(Bomb));
         init_bomb(bombs[i]);
     }
 
+    printf("linking player %d\n", num);
     link_player(player, lib);
 
+    printf("player %d init successful\n", num);
     return player;
 }
 
@@ -74,15 +80,14 @@ void get_name_and_lib(char *filename, Player *player) {
         player->lib_name[i] = lib_name[i];
         i++;
     }
+
+    free(name);
+    free(lib_name);
+    printf("player %d name and lib successful\n", player->id);
 }
 
-uint32_t **init_player_pos(uint32_t nb_player, uint8_t num) {
-    uint32_t **pos = malloc(2 * sizeof(uint32_t *));
-    for (int i = 0; i < 2; i++) {
-        pos[i] = malloc(nb_player * sizeof(uint32_t));
-    }
-
-    switch (num) {
+void init_player_pos(uint32_t nb_player, uint32_t pos[2][nb_player]) {
+    switch (nb_player) {
         case 1:
             pos[0][0] = MAP_SIZE/2;
             pos[1][0] = MAP_SIZE/2;
@@ -174,7 +179,8 @@ uint32_t **init_player_pos(uint32_t nb_player, uint8_t num) {
         default:
             break;
     }
-    return pos;
+
+    printf("init player pos successful\n");
 }
 
 SDL_Color init_player_color(uint8_t num) {
@@ -234,6 +240,8 @@ SDL_Color init_player_color(uint8_t num) {
             color.b = 0;
             color.a = 255;
     }
+
+    printf("init player color successful\n");
     return color;
 }
 
@@ -241,14 +249,16 @@ SDL_Color init_player_color(uint8_t num) {
 /*                                       MAP                                       */
 /***********************************************************************************/
 uint32_t init_map(Cell map[MAP_SIZE][MAP_SIZE]) {
-    for(int x = 0; x<MAP_SIZE; x+=CELL_SIZE) {
-        for(int y = 0; y<MAP_SIZE; y+=CELL_SIZE) {
+    for(int x = 0; x<MAP_SIZE; x++) {
+        for(int y = 0; y<MAP_SIZE; y++) {
             map[x][y].x = x;
             map[x][y].y = y;
             map[x][y].color = (SDL_Color){0, 0, 0, 255};
             map[x][y].rect = (SDL_Rect){x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE};
         }
     }
+
+    printf("init map successful\n");
     return EXIT_SUCCESS;
 }
 
@@ -256,11 +266,14 @@ uint32_t init_player_pos_on_map(Cell map[MAP_SIZE][MAP_SIZE], Player **players, 
     uint32_t map_x;
     uint32_t map_y;
 
-    for(int i = 0; i < nb_player; i++) {
+    for(uint32_t i = 0; i < nb_player; i++) {
         map_x = players[i]->x;
         map_y = players[i]->y;
+        printf("%d %d\n", map_x, map_y);
         map[map_x][map_y].color = players[i]->player_color;
     }
+
+    printf("init player position on map successful\n");
     return EXIT_SUCCESS;
 }
 
@@ -269,8 +282,8 @@ uint32_t compare_color(SDL_Color c1, SDL_Color c2) {
 }
 
 void update_score(Player **players, Cell map[MAP_SIZE][MAP_SIZE], uint32_t nb_player) {
-    for(int x = 0; x<MAP_SIZE; x+=CELL_SIZE) {
-        for(int y = 0; y<MAP_SIZE; y+=CELL_SIZE) {
+    for(int x = 0; x<MAP_SIZE; x++) {
+        for(int y = 0; y<MAP_SIZE; y++) {
             for (uint32_t i = 0; i < nb_player; i++) {
                 if (compare_color(map[x][y].color, players[i]->player_color)) {
                     players[i]->score++;

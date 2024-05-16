@@ -44,10 +44,10 @@ typedef struct s_player {
     char (*get_action)();
 } Player;
 
-Player* init_player(uint32_t nb_player, uint8_t num, char *lib);
+Player* init_player(uint32_t nb_player, uint8_t num, char *lib, uint32_t pos[2][nb_player]);
 void link_player(Player *player, char *lib);
 void get_name_and_lib(char *filename, Player *player);
-uint32_t **init_player_pos(uint32_t argc, uint8_t num);
+void init_player_pos(uint32_t nb_player, uint32_t pos[2][nb_player]);
 SDL_Color init_player_color(uint8_t num);
 
 /***********************************************************************************/

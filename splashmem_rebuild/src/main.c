@@ -3,9 +3,9 @@
 int main(int argc, char *argv[]) {
     setvbuf(stdout, NULL, _IONBF, 0);
 
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *grid;
+    SDL_Window **window = malloc(sizeof(SDL_Window *));
+    SDL_Renderer **renderer = malloc(sizeof(SDL_Renderer *));
+    SDL_Texture *grid = NULL;
     SDL_Color background = {0, 0, 0, 255};
     SDL_Color grid_color = {255, 255, 255, 255};
     SDL_Event e;
@@ -15,11 +15,12 @@ int main(int argc, char *argv[]) {
     char *game_master;
     Player *players[nb_player];
     Cell map[MAP_SIZE][MAP_SIZE];
+    uint32_t pos[2][nb_player];
 
-    if(init(window, renderer, grid, grid_color, nb_player, argv, players, map, game_master) == EXIT_ERROR) {
+    if(init(window, renderer, grid, grid_color, nb_player, argv, players, map, game_master, pos) == EXIT_ERROR) {
         return EXIT_ERROR;
     }
-    SDL_SetWindowTitle(window, "Splashmem");
+    SDL_SetWindowTitle(*window, "Splashmem");
 
     TTF_Init();
     TTF_Font *font = TTF_OpenFont("../assets/fonts/arial.ttf", 24);
@@ -27,9 +28,15 @@ int main(int argc, char *argv[]) {
     char text[TEXT_AREA_W];
     uint8_t finishing = 1;
     uint8_t done = 0;
+
+    renderMap(*renderer, map);
+    make_text(text, players, nb_player);
+    renderText(*renderer, font, text, &textRect);
+
     while(finishing) {
+        printf("loop\n");
         while(SDL_PollEvent(&e))
-            handle(&e, renderer, window);
+            handle(&e, *renderer, *window);
 
         for(uint8_t i = 0; i < nb_player; i++) {
             if(players[i]->credits > 0) {
@@ -41,10 +48,10 @@ int main(int argc, char *argv[]) {
             }
             check_bombs(map, players[i]);
         }
-        renderMap(renderer, map);
+        renderMap(*renderer, map);
         update_score(players, map, nb_player);
         make_text(text, players, nb_player);
-        renderText(renderer, font, text, &textRect);
+        renderText(*renderer, font, text, &textRect);
         SDL_Delay(REFRESH_RATE);
         if(done == nb_player) {
             finishing = 0;
@@ -55,6 +62,6 @@ int main(int argc, char *argv[]) {
         send_results();
     }
 
-    clean_and_quit(window, renderer, grid, players, nb_player);
+    clean_and_quit(*window, *renderer, grid, players, nb_player);
     return EXIT_SUCCESS;
 }

@@ -12,7 +12,7 @@ uint32_t init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture *grid, S
 
     for (uint8_t i = 0; i < nb_player; i++) {
         printf("init player %d\n", i);
-        players[i] = init_player(nb_player, i+1, argv[i+2], pos);
+        players[i] = init_player(nb_player, i+1, argv[i+2], pos, argv[1]);
     }
 
     printf("init map\n");
@@ -21,7 +21,11 @@ uint32_t init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture *grid, S
     printf("init player position on map\n");
     uint32_t position_success = init_player_pos_on_map(map, players, nb_player);
 
+    printf("players to string\n");
+    players_toString(players, nb_player);
+
     printf("init game master\n");
+    printf("%s\n", argv[1]);
     uint32_t game_master_success = init_game_master(argv[1], game_master);
     if (window_success == EXIT_ERROR || grid_success == EXIT_ERROR || map_success == EXIT_ERROR || position_success == EXIT_ERROR || game_master_success == EXIT_ERROR) {
         return EXIT_ERROR;
@@ -71,27 +75,37 @@ uint32_t init_grid_texture(SDL_Renderer *renderer, SDL_Texture *grid, SDL_Color 
     return EXIT_SUCCESS;
 }
 
-uint32_t init_game_master(char *filename, char *game_master) {
-    char *temp = malloc(25);
-
+uint32_t get_master_size(char *filename) {
+    printf("opening file\n");
     uint32_t fd = open(filename, O_RDONLY);
     if (fd == -1) {
         fprintf(stderr, "Error: %s\n", strerror(errno));
         return EXIT_ERROR;
     }
-    read(fd, temp, 25);
+    uint32_t size = 0;
+    char c;
+    while(c != '\0') {
+        read(fd, &c, 1);
+        size++;
+    }
+    lseek(fd, 0, SEEK_SET);
+    close(fd);
+    printf("size: %d\n", size);
+    return size;
+}
+
+uint32_t init_game_master(char *filename, char *game_master) {
+    printf("opening file\n");
+    uint32_t fd = open(filename, O_RDONLY);
+    if (fd == -1) {
+        fprintf(stderr, "Error: %s\n", strerror(errno));
+        return EXIT_ERROR;
+    }
+    printf("reading file\n");
+    read(fd, game_master, sizeof(game_master));
     lseek(fd, 0, SEEK_SET);
     close(fd);
 
-    uint8_t i = 0;
-    uint8_t j = 0;
-    while (temp[i] != '\0') {
-        j++;
-    }
-    game_master = malloc(j);
-    strcpy(game_master, temp);
-
-    free(temp);
     printf("Game master init successful\n");
     return EXIT_SUCCESS;
 }

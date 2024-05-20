@@ -35,6 +35,7 @@ void action_do(Player *player, Cell map[MAP_SIZE][MAP_SIZE], char act) {
             break;
         case ACTION_DASH_L:
             on_border = check_border(DIR_LEFT, player->x, DASH);
+            printf("on_border : %d\n", on_border);
             if(check_credits(player, DASH)) {
                 dash_left(player, map, on_border);
             }
@@ -186,7 +187,7 @@ void dash_left(Player *player, Cell map[MAP_SIZE][MAP_SIZE], uint8_t on_border) 
         }
     }
     else {
-        for(uint8_t i = 0; i < DASH-on_border; i++) {
+        for(uint8_t i = DASH-on_border; i < DASH; i++) {
             player->x -= 1;
             render_player_on_map(map, player);
         }
@@ -346,7 +347,7 @@ void check_bombs(Cell map[MAP_SIZE][MAP_SIZE], Player *player) {
             explode_bomb(player->bombs[i], *player, map);
             init_bomb(player->bombs[i]);
         }
-        else {
+        else if (player->bombs[i]->timer > 0) {
             player->bombs[i]->timer--;
         }
     }

@@ -95,6 +95,16 @@ void action_do(Player *player, Cell map[MAP_SIZE][MAP_SIZE], char act) {
             if(check_credits(player, BOMB)) {
                 drop_bomb(player);
             }
+            break;
+        case ACTION_ULTIME:
+            ultime(player, map);
+            break;
+        case POWERUP_TOURBILOL_STOP:
+            player->en_ultime = 0;
+            break;
+        case POWERUP_TOURBILOL:
+            player->PwrUP_id = POWERUP_TOURBILOL;
+            break;
         case ACTION_NUMBER:
             break;
     }
@@ -110,26 +120,12 @@ uint8_t check_border(enum direction dir, uint32_t pos, uint32_t move) {
         }
         else {
             pos += i;
-            if(pos == MAP_SIZE) {
+            if(pos == MAP_SIZE-1) {
                 return i;
             }
         }
     }
     return move;
-}
-
-uint8_t check_border_splash(enum direction dir, uint32_t pos) {
-    if(dir == DIR_LEFT || dir == DIR_UP) {
-        if(pos == 0) {
-            return 1;
-        }
-    }
-    else {
-        if(pos == MAP_SIZE) {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 uint8_t check_credits(Player *player, uint32_t move) {
@@ -296,34 +292,24 @@ void teleport_down(Player *player, uint8_t on_border) {
 }
 
 void splash(Cell map[MAP_SIZE][MAP_SIZE], Player *player) {
-    uint8_t on_border[4] = {check_border_splash(DIR_LEFT, player->x), check_border_splash(DIR_RIGHT, player->x),check_border_splash(DIR_UP, player->y), check_border_splash(DIR_DOWN, player->y)};
-    if(on_border[0]) {
-        player->x = MAP_SIZE-1;
-    }
-    else {
-        player->x -= MOVE;
-    }
+    move_left(player, check_border(DIR_LEFT, player->x, MOVE));
     render_player_on_map(map, player);
-    if(on_border[2]) {
-        player->y = MAP_SIZE-1;
-    }
-    else {
-        player->x -= MOVE;
-    }
+    move_up(player, check_border(DIR_UP, player->y, MOVE));
     render_player_on_map(map, player);
-    if(on_border[1]) {
-        player->x = 0;
-    }
-    else {
-        player->x += MOVE;
-    }
+    move_right(player, check_border(DIR_RIGHT, player->x, MOVE));
     render_player_on_map(map, player);
-    if(on_border[3]) {
-        player->y = 0;
-    }
-    else {
-        player->y += MOVE;
-    }
+    move_right(player, check_border(DIR_RIGHT, player->x, MOVE));
+    render_player_on_map(map, player);
+    move_down(player, check_border(DIR_DOWN, player->y, MOVE));
+    render_player_on_map(map, player);
+    move_down(player, check_border(DIR_DOWN, player->y, MOVE));
+    render_player_on_map(map, player);
+    move_left(player, check_border(DIR_LEFT, player->x, MOVE));
+    render_player_on_map(map, player);
+    move_left(player, check_border(DIR_LEFT, player->x, MOVE));
+    render_player_on_map(map, player);
+    move_up(player, check_border(DIR_UP, player->y, MOVE));
+    move_right(player, check_border(DIR_RIGHT, player->x, MOVE));
     render_player_on_map(map, player);
 }
 
@@ -361,4 +347,95 @@ void explode_bomb(Bomb *bomb, Player player, Cell map[MAP_SIZE][MAP_SIZE]) {
     action_do(&player, map, ACTION_SPLASH);
     player.x = x;
     player.y = y;
+}
+
+void ultime(Player *player, Cell map[MAP_SIZE][MAP_SIZE]) {
+    if(player->en_ultime != 1) {
+        player->PwrUP_id = POWERUP_TOURBILOL_STOP;
+        player->en_ultime = 1;
+        player->credits = 0;
+    }
+    switch (player->id) {
+    case 0:
+        if((player->en_ultime == 1) && (player->ultime_timer > 7))
+        {
+            uint32_t x = player->x;
+            uint32_t y = player->y;
+            for(int i = 0; i < 15; i++)
+            {
+                player->x = player->x + 5*i + i;
+                player->y = player->y - 1;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 5*i + i;
+                player->y = player->y - 1 + i;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 5*i + i;
+                player->y = player->y - 1 - i;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 7*i + i;
+                player->y = player->y - 1;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 7*i + i;
+                player->y = player->y - 1 + i;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 7*i + i;
+                player->y = player->y - 1 - i;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 9*i + i;
+                player->y = player->y - 1;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 9*i + i;
+                player->y = player->y - 1 + i;
+                render_player_on_map(map, player);
+
+                player->x = player->x + 9*i + i;
+                player->y = player->y - 1 - i;
+                render_player_on_map(map, player);
+            }
+            player->x = x;
+            player->y = y;
+        }
+        break;
+    case 1:
+        if((player->en_ultime == 1) && (player->ultime_timer > 7)) {
+            uint32_t x = player->x;
+            uint32_t y = player->y;
+            for(uint32_t i = 0; i < player->ultime_timer; i++) {
+                for(int32_t j = -15; j <15; j+=2) {
+                    for(int32_t k = -15; k< 15; k += 2) {
+                        if((((signed int)player->x + j)>0)&&((((signed int)player->y + k))>0) && ((((signed int)player->x + j))<MAP_SIZE-1) && ((((signed int)player->y + k))<MAP_SIZE-1)) {
+                            player->x = player->x + j;
+                            player->y = player->y + k;
+                            render_player_on_map(map, player);
+                        }
+                    }
+                }
+            }
+            player->x = x;
+            player->y = y;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void powerup_do(Player *player, Cell map[MAP_SIZE][MAP_SIZE], uint8_t powerup) {
+    switch(powerup) {
+        case POWERUP_TOURBILOL_STOP:
+            player->en_ultime = 0;
+            break;
+        case POWERUP_TOURBILOL:
+            player->PwrUP_id = POWERUP_TOURBILOL;
+            break;
+        default:
+            break;
+    }
 }

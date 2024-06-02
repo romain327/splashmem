@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_Mixer.h>
 #include <dlfcn.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -28,6 +29,21 @@ void init_bomb(Bomb *bomb);
 void bombs_toString(Bomb *bombs[BOMB_TIMER]);
 
 /***********************************************************************************/
+/*                                      IMAGES                                     */
+/***********************************************************************************/
+
+typedef struct s_bmp_player
+{
+    SDL_Texture* bmp_haut[2];
+    SDL_Texture* bmp_droit[2];
+    SDL_Texture* bmp_gauche[2];
+    SDL_Texture* bmp_bas[2];
+    SDL_Texture* bmp_mort;
+    SDL_Texture* bmp_ultime[8];
+    SDL_Texture* bmp_catch[2];
+} t_bmp_player;
+
+/***********************************************************************************/
 /*                                      PLAYER                                     */
 /***********************************************************************************/
 typedef struct s_player {
@@ -43,6 +59,18 @@ typedef struct s_player {
     Bomb *bombs[BOMB_TIMER];
     uint8_t is_done;
     char (*get_action)();
+
+    t_bmp_player bmp;
+    uint32_t x_avant;
+    uint32_t y_avant;
+    uint32_t compteur_bmp;
+    uint32_t anim_ultime;
+    uint32_t en_ultime;
+    Mix_Chunk *wav_catch[2];
+
+    uint32_t ultime_timer;
+    uint32_t pwrup_timer;
+    uint32_t PwrUP_id;
 } Player;
 
 Player* init_player(uint32_t nb_player, uint8_t num, char *lib, uint32_t pos[2][nb_player], char *filename);

@@ -7,7 +7,7 @@ INC = include
 SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:.c=.o)
 EXE = splashmem
-ARGS = game_config.bin libs/p1.so libs/p2.so
+ARGS = game_config.bin libs/p1.so libs/p2.so libs/p3.so
 
 LDFLAGS = `sdl2-config --libs --cflags` -lSDL2_ttf -lcurl
 

@@ -6,11 +6,15 @@
 #define EXIT_ERROR 1
 
 //Window
-#define VIEWPORT_W 1000
-#define VIEWPORT_H 1040
-#define TEXT_AREA_W 1000
-#define TEXT_AREA_H 40
-#define REFRESH_RATE 100
+#define VIEWPORT_W 1900
+#define VIEWPORT_H 1000
+
+#define GAME_AREA_X 0
+#define GAME_AREA_Y 0
+#define GAME_AREA_W 1000
+
+#define INFOS_AREA_X 1010
+#define INFOS_AREA_Y 0
 
 //Map
 #define MAP_SIZE 100
@@ -19,5 +23,6 @@
 //Gameplay
 #define CREDITS 9000
 #define BOMB_TIMER 5
+#define REFRESH_RATE 5
 
 #endif //SPLASHMEM_PARAMS_H

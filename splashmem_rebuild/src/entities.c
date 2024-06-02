@@ -23,6 +23,14 @@ Player *init_player(uint32_t nb_player, uint8_t num, char *lib, uint32_t pos[2][
     player->id = num;
     player->x = pos[0][num-1];
     player->y = pos[1][num-1];
+    player->x_avant = 0;
+    player->y_avant = 0;
+    player->compteur_bmp = 0;
+    player->anim_ultime = 0;
+    player->en_ultime = 0;
+    player->ultime_timer = 0;
+    player->pwrup_timer = 0;
+    player->PwrUP_id = 0;
     player->p = (SDL_Rect){player->x, player->y, CELL_SIZE, CELL_SIZE};
 
     printf("init player %d color\n", num);

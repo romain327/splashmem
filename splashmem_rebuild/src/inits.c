@@ -15,6 +15,9 @@ uint32_t init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture *grid, S
         players[i] = init_player(nb_player, i+1, argv[i+2], pos, argv[1]);
     }
 
+    printf("init images\n");
+    uint32_t images_success = init_players_bmp(*renderer, players);
+
     printf("init map\n");
     uint32_t map_success = init_map(map);
 
@@ -108,4 +111,141 @@ uint32_t init_game_master(char *filename, char *game_master) {
 
     printf("Game master init successful\n");
     return EXIT_SUCCESS;
+}
+
+uint32_t init_players_bmp(SDL_Renderer *renderer, Player **players) {
+    SDL_Surface* image;
+
+    /////////////////Joueur 1////////////////
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Haut1.bmp");
+    players[0]->bmp.bmp_haut[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Haut2.bmp");
+    players[0]->bmp.bmp_haut[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Bas1.bmp");
+    players[0]->bmp.bmp_bas[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Bas2.bmp");
+    players[0]->bmp.bmp_bas[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Droite1.bmp");
+    players[0]->bmp.bmp_droit[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP(".assets/images/Kevin/Kevin_Droite2.bmp");
+    players[0]->bmp.bmp_droit[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Gauche1.bmp");
+    players[0]->bmp.bmp_gauche[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Gauche2.bmp");
+    players[0]->bmp.bmp_gauche[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Mort.bmp");
+    players[0]->bmp.bmp_mort = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_1.bmp");
+    players[0]->bmp.bmp_ultime[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_2.bmp");
+    players[0]->bmp.bmp_ultime[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_3.bmp");
+    players[0]->bmp.bmp_ultime[2] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_4.bmp");
+    players[0]->bmp.bmp_ultime[3] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_5.bmp");
+    players[0]->bmp.bmp_ultime[4] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_6.bmp");
+    players[0]->bmp.bmp_ultime[5] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_7.bmp");
+    players[0]->bmp.bmp_ultime[6] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Kevin/Kevin_Ultime/Kevin_Ultime_8.bmp");
+    players[0]->bmp.bmp_ultime[7] = SDL_CreateTextureFromSurface(renderer,image);
+
+    //////////////Joueur 2/////////////////
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Haut1.bmp");
+    players[1]->bmp.bmp_haut[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Haut2.bmp");
+    players[1]->bmp.bmp_haut[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Bas1.bmp");
+    players[1]->bmp.bmp_bas[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Bas2.bmp");
+    players[1]->bmp.bmp_bas[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Droit1.bmp");
+    players[1]->bmp.bmp_droit[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Droit2.bmp");
+    players[1]->bmp.bmp_droit[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Gauche1.bmp");
+    players[1]->bmp.bmp_gauche[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Gauche2.bmp");
+    players[1]->bmp.bmp_gauche[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Mort.bmp");
+    players[1]->bmp.bmp_mort = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_1.bmp");
+    players[1]->bmp.bmp_ultime[0] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_2.bmp");
+    players[1]->bmp.bmp_ultime[1] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_3.bmp");
+    players[1]->bmp.bmp_ultime[2] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_4.bmp");
+    players[1]->bmp.bmp_ultime[3] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_5.bmp");
+    players[1]->bmp.bmp_ultime[4] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_6.bmp");
+    players[1]->bmp.bmp_ultime[5] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_7.bmp");
+    players[1]->bmp.bmp_ultime[6] = SDL_CreateTextureFromSurface(renderer,image);
+
+    image = SDL_LoadBMP("./assets/images/Romain/Romain_Ultime/Romain_Ultime_8.bmp");
+    players[1]->bmp.bmp_ultime[7] = SDL_CreateTextureFromSurface(renderer,image);
+
+    SDL_FreeSurface(image);
+
+    return EXIT_SUCCESS;
+}
+
+void init_wav(Player **players, Mix_Chunk *dash, Mix_Chunk *scooby, Mix_Chunk *tetris) {
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) < 0) {
+        fprintf(stderr, "Mix_OpenAudio Error: %s\n", Mix_GetError());
+    }
+    Mix_AllocateChannels(32);
+
+    for(uint8_t i = 0; i < 33; i++) {
+        Mix_Volume(i, 128);
+    }
+
+    dash = Mix_LoadWAV("./assets/sounds/dash.wav");
+    scooby = Mix_LoadWAV("./assets/sounds/scooby.wav");
+    tetris = Mix_LoadWAV("./assets/sounds/tetris.wav");
+
+    players[0]->wav_catch[0] = Mix_LoadWAV("./assets/sounds/Kevin_Catch_1.wav");
+    players[0]->wav_catch[1] = Mix_LoadWAV("./assets/sounds/Kevin_Catch_2.wav");
+
+    players[1]->wav_catch[0] = Mix_LoadWAV("./assets/sounds/Romain_Catch_1.wav");
+    players[1]->wav_catch[1] = Mix_LoadWAV("./assets/sounds/Romain_Catch_2.wav");
+
+    Mix_PlayChannel(1, tetris, -1);
 }

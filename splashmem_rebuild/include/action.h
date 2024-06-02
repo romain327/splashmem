@@ -28,7 +28,10 @@ enum action {
     ACTION_TELEPORT_D,
     ACTION_SPLASH,
     ACTION_BOMB,
-    ACTION_NUMBER
+    ACTION_ULTIME,
+    ACTION_NUMBER,
+    POWERUP_TOURBILOL_STOP,
+    POWERUP_TOURBILOL
 };
 
 enum direction {
@@ -41,7 +44,6 @@ enum direction {
 void action_do(Player *player, Cell map[MAP_SIZE][MAP_SIZE], char act);
 
 uint8_t check_border(enum direction dir, uint32_t pos, uint32_t move);
-uint8_t check_border_splash(enum direction dir, uint32_t pos);
 uint8_t check_credits(Player *player, uint32_t move);
 void move_left(Player *player, uint8_t on_border);
 void move_right(Player *player, uint8_t on_border);
@@ -59,5 +61,6 @@ void splash(Cell map[MAP_SIZE][MAP_SIZE], Player *player);
 void drop_bomb(Player *player);
 void check_bombs(Cell map[MAP_SIZE][MAP_SIZE], Player *player);
 void explode_bomb(Bomb *bomb, Player player, Cell map[MAP_SIZE][MAP_SIZE]);
+void ultime(Player *player, Cell map[MAP_SIZE][MAP_SIZE]);
 
 #endif //SPLASHMEM_ACTION_H

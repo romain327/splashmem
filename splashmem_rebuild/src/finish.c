@@ -65,6 +65,7 @@ void clean_and_quit(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *gri
         free(players[i]);
     }
     free(players);
+
     SDL_DestroyTexture(grid);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
